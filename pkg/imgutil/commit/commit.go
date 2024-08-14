@@ -258,6 +258,11 @@ func writeContentsForImage(ctx context.Context, snName string, baseImg container
 	}
 
 	cs := baseImg.ContentStore()
+
+	if content.WriteBlob(ctx, cs, configDesc.Digest.String(), bytes.NewReader(newConfigJSON), configDesc) != nil {
+		return ocispec.Descriptor{}, emptyDigest, err
+	}
+
 	baseMfst, _, err := imgutil.ReadManifest(ctx, baseImg)
 	if err != nil {
 		return ocispec.Descriptor{}, emptyDigest, err
